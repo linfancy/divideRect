@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>乱序排列的图片插件</title>
+	<style type="text/css">
+	body, html, div{
+		padding: 0;margin: 0;
+	}
+	section{
+		background: black;
+		overflow: hidden;
+		margin: 0 auto;
+		width: 900px;
+		height: 400px;
+		border: 1px solid black;
+		position: relative;
+	}
+	section div{
+		float:left;
+		background: yellow;
+		border: 1px solid black;
+		position: absolute;
+	}
+	</style>
+	<script type="text/javascript">
+	window.onload = function(){
+		var osection = document.getElementsByTagName("section")[0];
+		var odiv = osection.getElementsByTagName("div");
+		var min_object = {'width': 100, 'height': 100};
+		var max_object = {'width': 200, 'height': 200};
+		var min_area = 10000;
+		var max_area = 40000;
+
+		var target_object = []; //目标矩形的排列
+
+
+		function divideRec(width, height, left, top){
+			console.log(width + " " + height + " "+ left + " " + top ); 
+			if(width * height >= max_area ||  height > max_object.height){
+				if(width >= height){
+					var midPoint = Math.random()*(width-min_object.width) + min_object.width;
+					while(true){
+						if( (midPoint < min_object.width)){
+							midPoint = Math.random()*(width-min_object.width) + min_object.width;
+						}else{
+							break;
+						}
+					}
+					divideRec(midPoint, height, left, top);
+					divideRec(width - midPoint, height, left + midPoint, top);
+				}else{
+					var midPoint = Math.random() * (height-min_object.height) + min_object.height;
+					while(true){
+						if((midPoint < min_object.height)){
+							midPoint = Math.random() * (height-min_object.height) + min_object.height;
+						}else{
+							break;
+						}
+					}
+					divideRec(width, midPoint, left, top);
+					divideRec(width, height - midPoint, left, top + midPoint);
+				}
+				console.log(1);
+			}else if(width * height >= min_area){
+				var target = {
+					'width': width - 2,
+					'height': height - 2,
+					'left' : left,
+					'top' : top
+				};
+				target_object.push(target);
+				console.log(2);
+				return;
+			}else{
+				console.log(3);
+				var temp = width <= height ? width : height;
+				var target = {
+					'width': temp - 2,
+					'height': temp - 2,
+					'left': left,
+					'top': top
+				}
+				target_object.push(target);
+				return;
+			}
+		}
+
+		var topParent = {
+			'width': osection.offsetWidth,
+			'height': osection.offsetHeight,
+			'left': osection.offsetLeft,
+			'top': osection.offsetTop
+		};
+		console.log(osection.offsetLeft);
+		divideRec(osection.offsetWidth, osection.offsetHeight, 0, osection.offsetTop);
+
+		for(var i = 0; i < odiv.length; i++){
+			odiv.display = "none";
+		}
+		var j = 0;
+		for(var i = 0; i < target_object.length; i++){
+			if(target_object[i].width * target_object[i].height >= min_area){
+				odiv[j].index = i;
+				odiv[j].display = "block";
+				odiv[j].style.width = target_object[i].width + "px";
+				odiv[j].style.height = target_object[i].height + "px";
+				odiv[j].style.top = target_object[i].top + "px";
+				odiv[j].style.left = target_object[i].left + "px";
+				j++;
+			}else{
+				var adiv = document.createElement("div");
+				adiv.display = "block";
+				adiv.style.width = target_object[i].width + "px";
+				adiv.style.height = target_object[i].height + "px";
+				adiv.style.top = target_object[i].top + "px";
+				adiv.style.left = target_object[i].left + "px";
+				adiv.style.background = "green";
+				osection.appendChild(adiv);
+			}
+		}
+		console.log(target_object);
+	}
+	</script>
+</head>
+<body>
+	<section>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+	</section>
+</body>
+</html>
